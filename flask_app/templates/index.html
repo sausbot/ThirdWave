@@ -1,0 +1,75 @@
+<html>
+<style>
+  body {
+    background-color: pink;
+  }
+
+  h1 {
+    color: maroon;
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  p {
+    color: black;
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  button {
+    color: black;
+    font-family: "Times New Roman", Times, serif;
+    background-color: transparent;
+    border-radius: 20px;
+  }
+
+  .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  input[type="text"] {
+    background: transparent;
+    border-radius: 20px;
+  }
+</style>
+
+<div class="wrapper" style="margin-top: 200px;">
+  <h1>enter a city
+</div>
+</div>
+<div class="wrapper">
+  <input type="text" id="city_name" size="20px" value="">
+</div>
+<div class="wrapper" style="margin-top: 10px;">
+  <button onclick=searching()>find me a cafe</button>
+</div>
+<div class="wrapper">
+  <p id="error"></p>
+</div>
+
+<script>
+  function searching() {
+    let city = document.getElementById("city_name").value
+    console.log(city)
+    if (city == "") {
+      document.getElementById("error").innerHTML = "Error: input is empty"
+      return
+    }
+
+    fetch('/submit', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ "data": city })
+    })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('error').textContent = 'Result: ' + data.result;
+      })
+      .catch(error => console.error('Error:', error));
+  }
+</script>
+
+</html>
