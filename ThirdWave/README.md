@@ -1,0 +1,2 @@
+# ThirdWave
+A JavaScript project
