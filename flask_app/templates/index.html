@@ -30,6 +30,7 @@
   input[type="text"] {
     background: transparent;
     border-radius: 20px;
+    text-align: center;
   }
 </style>
 
@@ -66,7 +67,7 @@
     })
       .then(response => response.json())
       .then(data => {
-        document.getElementById('error').textContent = 'Result: ' + data.result;
+        document.getElementById('error').textContent = data.result;
       })
       .catch(error => console.error('Error:', error));
   }
