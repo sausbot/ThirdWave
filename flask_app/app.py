@@ -38,6 +38,12 @@ def get_coffee_shop(city, radius=2000):
         "https://maps.googleapis.com/maps/api/place/nearbysearch/json", params=params
     )
 
+    # Check if the request was successful
+    if response.status_code != 200:
+        print(f"Error: Received status code {response.status_code}")
+        return {"message": "Failed to fetch data from Google Places API. Please try again later."}
+
+    # Parse the JSON response
     result = response.json()
     len_results = len(result["results"])
 
