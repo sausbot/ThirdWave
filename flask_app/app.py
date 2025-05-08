@@ -1,3 +1,4 @@
+import os
 import requests
 import random
 
@@ -9,8 +10,10 @@ from geopy.geocoders import Nominatim
 app = Flask(__name__)
 CORS(app)
 
-KEY = ""
-
+# Get the Google API key from the environment variable
+KEY = os.getenv("GOOGLE_API_KEY", "")
+if not KEY:
+    print("Warning: GOOGLE_API_KEY environment variable is not set.")
 
 @app.route("/")
 def index():
@@ -19,13 +22,14 @@ def index():
 
 @app.route("/submit", methods=["POST"])
 def process():
+    "Process the data from the form"
     input_data = request.get_json()["data"]
-    # Process the data
     result = get_coffee_shop(input_data)
     return {"result": result}
 
 
 def get_coffee_shop(city, radius=2000):
+    "Find a coffee shop in the given city and radius"
     latitude, longitude = get_location_cordinates(city)
     params = {
         "location": f"{latitude},{longitude}",
@@ -58,10 +62,11 @@ def get_coffee_shop(city, radius=2000):
 
 
 def get_location_cordinates(city):
+    "Get the latitude and longitude of the given city"
     geolocator = Nominatim(user_agent="ThirdWave")
     location = geolocator.geocode(city)
     return location.latitude, location.longitude
 
 
 if __name__ == "__main__":
-    app.run("localhost", 5000)
+    app.run(host="0.0.0.0", port=5000)

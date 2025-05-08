@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  thirdwave-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - GOOGLE_API_KEY=<your_google_api_key>
+    volumes:
+      - ./flask_app:/app
+    command: python /app/app.py
