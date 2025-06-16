@@ -13,3 +13,13 @@ services:
     volumes:
       - ./flask_app:/app
     command: python /app/app.py
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - GOOGLE_API_KEY=<your_google_api_key>
+    volumes:
+      - ./flask_app:/app
+    command: pytest /app

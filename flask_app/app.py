@@ -31,6 +31,8 @@ def process():
 def get_coffee_shop(city, radius=2000):
     "Find a coffee shop in the given city and radius"
     latitude, longitude = get_location_cordinates(city)
+    if latitude is None or longitude is None:
+        return {"message": "Could not find the specified city. Please try another."}
     params = {
         "location": f"{latitude},{longitude}",
         "radius": radius,
@@ -65,6 +67,8 @@ def get_location_cordinates(city):
     "Get the latitude and longitude of the given city"
     geolocator = Nominatim(user_agent="ThirdWave")
     location = geolocator.geocode(city)
+    if location is None:
+        return None, None
     return location.latitude, location.longitude
 
 

@@ -34,6 +34,12 @@ docker-compose up
 
 Access the app at `http://localhost:5000`
 
+## Test
+
+```
+docker-compose run --rm test
+```
+
 ## Usage
 
 Enter the name of a city in the input field.
