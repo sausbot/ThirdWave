@@ -1,76 +1,396 @@
-<html>
-<style>
-  body {
-    background-color: pink;
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>third wave — global coffee</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;900&family=Noto+Sans+Arabic:wght@700&family=Noto+Sans+JP:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  h1 {
-    color: maroon;
-    font-family: "Times New Roman", Times, serif;
-  }
+        body {
+            background: #ffffff;
+            font-family: Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
 
-  p {
-    color: black;
-    font-family: "Times New Roman", Times, serif;
-  }
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
 
-  button {
-    color: black;
-    font-family: "Times New Roman", Times, serif;
-    background-color: transparent;
-    border-radius: 20px;
-  }
+        /* Main title */
+        h1 {
+            font-size: clamp(3rem, 12vw, 9rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #000;
+            letter-spacing: -0.05em;
+            text-transform: lowercase;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            position: relative;
+            z-index: 5;
+            font-stretch: condensed;
+        }
 
-  .wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+        /* Search interface */
+        .search-box {
+            width: 100%;
+            max-width: 350px;
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 100;
+        }
 
-  input[type="text"] {
-    background: transparent;
-    border-radius: 20px;
-    text-align: center;
-  }
-</style>
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            border: 3px solid #000;
+            background: #fff;
+            font-family: Helvetica, Arial, sans-serif;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            text-transform: lowercase;
+            position: relative;
+            z-index: 100;
+            border-radius: 8px 10px 9px 11px;
+        }
 
-<div class="wrapper" style="margin-top: 200px;">
-  <h1>enter a city
-</div>
-</div>
-<div class="wrapper">
-  <input type="text" id="city_name" size="20px" value="">
-</div>
-<div class="wrapper" style="margin-top: 10px;">
-  <button onclick=searching()>find me a cafe</button>
-</div>
-<div class="wrapper">
-  <p id="error"></p>
-</div>
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+        }
 
-<script>
-  function searching() {
-    let city = document.getElementById("city_name").value
-    console.log(city)
-    if (city == "") {
-      document.getElementById("error").innerHTML = "Error: input is empty"
-      return
-    }
+        button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            font-family: Helvetica, Arial, sans-serif;
+            background: #000;
+            color: #fff;
+            border: 3px solid #000;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: lowercase;
+            position: relative;
+            z-index: 100;
+            border-radius: 9px 11px 10px 8px;
+            overflow: hidden;
+            transition: color 0.4s ease;
+        }
 
-    fetch('/submit', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ "data": city })
-    })
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('error').textContent = data.result;
-      })
-      .catch(error => console.error('Error:', error));
-  }
-</script>
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
 
+        button:hover {
+            color: #000;
+        }
+
+        button:hover::before {
+            left: 0;
+        }
+
+        /* SVG Badges */
+        .svg-badge {
+            position: fixed;
+            cursor: move;
+            user-select: none;
+            z-index: 10;
+            width: 200px;
+            height: auto;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .svg-badge:active {
+            cursor: grabbing;
+            z-index: 100;
+            animation: none;
+        }
+
+        .svg-badge img {
+            width: 100%;
+            height: auto;
+            display: block;
+            pointer-events: none;
+        }
+
+        /* Floating animations with different delays and durations */
+        .svg-badge:nth-child(3) {
+            animation: float 7s ease-in-out infinite;
+            animation-delay: 0s;
+        }
+
+        .svg-badge:nth-child(4) {
+            animation: float 8s ease-in-out infinite;
+            animation-delay: -2s;
+        }
+
+        .svg-badge:nth-child(5) {
+            animation: float 6.5s ease-in-out infinite;
+            animation-delay: -4s;
+        }
+
+        .svg-badge:nth-child(6) {
+            animation: float 7.5s ease-in-out infinite;
+            animation-delay: -1s;
+        }
+
+        .svg-badge:nth-child(7) {
+            animation: float 6.8s ease-in-out infinite;
+            animation-delay: -3s;
+        }
+
+        .svg-badge:nth-child(8) {
+            animation: float 7.2s ease-in-out infinite;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(10px, -15px) rotate(2deg);
+            }
+            50% {
+                transform: translate(-5px, -10px) rotate(-1deg);
+            }
+            75% {
+                transform: translate(-10px, -5px) rotate(1deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .svg-badge {
+                width: 300px;
+            }
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #000;
+            text-transform: lowercase;
+            position: relative;
+            z-index: 100;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        /* Result */
+        .result {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            color: #fff;
+            padding: 15px 30px;
+            border: 3px solid #000;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: center;
+            max-width: 80%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            text-transform: lowercase;
+            border-radius: 20px 24px 22px 18px;
+        }
+
+        .result.show {
+            opacity: 1;
+        }
+
+        /* Instructions */
+        .instructions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #999;
+            text-align: right;
+            z-index: 5;
+            text-transform: lowercase;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>find a cafe</h1>
+
+        <div class="search-box">
+            <input 
+                type="text" 
+                id="city_name" 
+                placeholder="enter a city"
+                autocomplete="off"
+            />
+            <button onclick="searching()">search</button>
+            <div class="loading" id="loading">searching...</div>
+        </div>
+    </div>
+
+    <!-- SVG Badges positioned around the title -->
+    <div class="svg-badge" style="top: 55%; left: 17%; width: 280px;">
+        <img src="/badges/1.svg" alt="badge">
+    </div>
+    <div class="svg-badge" style="top: 39%; left: 16%;">
+        <img src="/badges/2.svg" alt="badge">
+    </div>
+    <div class="svg-badge" style="top: 34%; left: 50%;">
+        <img src="/badges/3.svg" alt="badge">
+    </div>
+    <div class="svg-badge" style="top: 45%; left: 60%; width: 280px;">
+        <img src="/badges/4.svg" alt="badge">
+    </div>
+    <div class="svg-badge" style="top: 52%; left: 56%; width: 280px;">
+        <img src="/badges/5.svg" alt="badge">
+    </div>
+    <div class="svg-badge" style="top: 32%; left: 27%;">
+        <img src="/badges/6.svg" alt="badge">
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <script>
+        // Make SVG badges draggable
+        const svgBadges = document.querySelectorAll('.svg-badge');
+        let activeBadge = null;
+        let currentOffset = { x: 0, y: 0 };
+
+        svgBadges.forEach(badge => {
+            badge.addEventListener('mousedown', dragStart);
+            badge.addEventListener('touchstart', dragStart);
+        });
+
+        function dragStart(e) {
+            if (e.type === 'touchstart') {
+                e.clientX = e.touches[0].clientX;
+                e.clientY = e.touches[0].clientY;
+            }
+
+            activeBadge = e.currentTarget;
+            
+            const rect = activeBadge.getBoundingClientRect();
+            currentOffset = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('mouseup', dragEnd);
+            document.addEventListener('touchend', dragEnd);
+        }
+
+        function drag(e) {
+            if (!activeBadge) return;
+
+            e.preventDefault();
+
+            let clientX, clientY;
+            if (e.type === 'touchmove') {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            activeBadge.style.left = (clientX - currentOffset.x) + 'px';
+            activeBadge.style.top = (clientY - currentOffset.y) + 'px';
+            activeBadge.style.right = 'auto';
+        }
+
+        function dragEnd() {
+            activeBadge = null;
+            document.removeEventListener('mousemove', drag);
+            document.removeEventListener('touchmove', drag);
+            document.removeEventListener('mouseup', dragEnd);
+            document.removeEventListener('touchend', dragEnd);
+        }
+
+        // Search functionality
+        function searching() {
+            let city = document.getElementById("city_name").value;
+            let resultEl = document.getElementById("result");
+            let loadingEl = document.getElementById("loading");
+
+            if (city === "") {
+                resultEl.textContent = "please enter a city";
+                resultEl.classList.add("show");
+                setTimeout(() => resultEl.classList.remove("show"), 3000);
+                return;
+            }
+
+            loadingEl.classList.add("active");
+            resultEl.classList.remove("show");
+
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "data": city })
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadingEl.classList.remove("active");
+                resultEl.textContent = data.result.toLowerCase();
+                resultEl.classList.add("show");
+            })
+            .catch(error => {
+                loadingEl.classList.remove("active");
+                resultEl.textContent = "error: " + error.message.toLowerCase();
+                resultEl.classList.add("show");
+            });
+        }
+
+        // Enter key support
+        document.getElementById("city_name").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") searching();
+        });
+    </script>
+</body>
 </html>

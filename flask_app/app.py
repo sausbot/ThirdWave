@@ -2,7 +2,7 @@ import os
 import requests
 import random
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, send_from_directory
 from flask_cors import CORS
 from geopy.geocoders import Nominatim
 
@@ -18,6 +18,11 @@ if not KEY:
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+@app.route("/badges/<path:filename>")
+def serve_badge(filename):
+    return send_from_directory("badges", filename)
 
 
 @app.route("/submit", methods=["POST"])

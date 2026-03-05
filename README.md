@@ -2,7 +2,9 @@
 
 ThirdWave is a web application that helps users find coffee shops in any city using the Google Places API. It leverages Flask for the backend and a simple HTML interface for user interaction.
 
-![alt text](sample.png)
+## Demo
+
+![ThirdWave Demo](demo.gif)
 
 ## Features
 
